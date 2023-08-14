@@ -43,7 +43,7 @@ const getSingleBook = catchAsync(async (req, res) => {
 const deleteBook = catchAsync(async (req, res) => {
   const bookId = req.params.id;
 
-  const result = await BookService.getSingleBook(bookId);
+  const result = await BookService.deleteBook(bookId);
 
   sendResponse(res, {
     success: true,

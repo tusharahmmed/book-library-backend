@@ -71,7 +71,7 @@ const getAllBooks = async (
 
 // get single book
 const getSingleBook = async (bookID: string) => {
-  const result = await Book.findById(bookID);
+  const result = await Book.findById(bookID).populate('authorId');
 
   return result;
 };
