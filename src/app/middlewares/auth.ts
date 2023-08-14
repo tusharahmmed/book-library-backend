@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import { JwtPayload, Secret } from 'jsonwebtoken';
+import { Secret } from 'jsonwebtoken';
 import config from '../../config';
 import ApiError from '../../errors/ApiError';
 import { jwtHelpers } from '../../helpers/jwtHelper';
+import { IRequestedUser } from '../../interface/req.user';
 
 export const auth =
-  () =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  () => async (req: Request, res: Response, next: NextFunction) => {
     try {
       // get token
       const authoriedToken = req.headers.authorization;
@@ -27,9 +27,8 @@ export const auth =
       }
 
       // set requested verified user
-      req.user = verifiedUser as JwtPayload;
+      req.user = verifiedUser as IRequestedUser;
 
-      
       // go to next
       return next();
     } catch (error) {

@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import config from '../../../config';
 import catchAsync from '../../../shared/catchAsync';
 import { sendResponse } from '../../../shared/sendResponse';
@@ -66,9 +67,9 @@ const refreshToken: RequestHandler = catchAsync(async (req, res) => {
 
 // get user
 const getUser: RequestHandler = catchAsync(async (req, res) => {
-  const { accessToken } = req.body;
+  const requestedUser = req.user;
 
-  const result = await AuthService.getUser(accessToken);
+  const result = await AuthService.getUser(requestedUser as JwtPayload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

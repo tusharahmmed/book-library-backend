@@ -49,7 +49,7 @@ const createUser = async (payload: IUser) => {
 // log in user
 const loginUser = async (payload: ILoginPayload): Promise<ILoginResponse> => {
   // check user exist
-  const user = await User.isUserExist(payload.phoneNumber);
+  const user = await User.isUserExist(payload.email);
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
@@ -123,32 +123,16 @@ const refreshToken = async (
 };
 
 // get user
-const getUser = (accessToken: string) => {
-  // varify user
-  let verifiedUser = null;
-
-  // check invalid token
-  try {
-    verifiedUser = jwtHelpers.verifyToken(
-      accessToken,
-      config.jwt.secret as Secret,
-    ) as JwtPayload;
-  } catch (err) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid access token');
-  }
-
-  // check user exist
-  const { email, _id } = verifiedUser;
-
-  const userExist = User.isUserExist(email);
-  if (!userExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+const getUser = (user: JwtPayload) => {
+  console.log(user);
+  if (!user?.email) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
   }
 
   // return the user
-  const user = User.findById(_id);
+  const result = User.findOne({ email: user?.email });
 
-  return user;
+  return result;
 };
 
 export const AuthService = {

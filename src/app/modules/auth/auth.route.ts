@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { auth } from '../../middlewares/auth';
 import { validateZod } from '../../middlewares/validateZod';
 import { AuthController } from './auth.controller';
 import { AuthValidation } from './auth.validation';
@@ -22,10 +23,6 @@ router.post(
   AuthController.refreshToken,
 );
 
-router.get(
-  '/',
-  validateZod(AuthValidation.getUserZodSchema),
-  AuthController.getUser,
-);
+router.get('/', auth(), AuthController.getUser);
 
 export const AuthRoutes = router;

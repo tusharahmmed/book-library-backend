@@ -28,8 +28,8 @@ const refreshTokenZodScehma = z.object({
 
 // get user validation
 const getUserZodSchema = z.object({
-  body: z.object({
-    accessToken: z.string({ required_error: 'Access token is required' }),
+  cookies: z.object({
+    refreshToken: z.string({ required_error: 'Access token is required' }),
   }),
 });
 
