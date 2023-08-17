@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -43,13 +44,14 @@ const createUser = async (payload: IUser) => {
   return {
     accessToken,
     refreshToken,
+    user: result,
   };
 };
 
 // log in user
 const loginUser = async (payload: ILoginPayload): Promise<ILoginResponse> => {
   // check user exist
-  const user = await User.isUserExist(payload.email);
+  const user: any = await User.isUserExist(payload.email);
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
@@ -64,7 +66,7 @@ const loginUser = async (payload: ILoginPayload): Promise<ILoginResponse> => {
   }
 
   // generate token
-  const { email, _id } = user;
+  const { email, _id } = user as any;
 
   const accessToken = jwtHelpers.createToken(
     { _id, email },
@@ -78,9 +80,13 @@ const loginUser = async (payload: ILoginPayload): Promise<ILoginResponse> => {
     config.jwt.refresh_expires_in as string,
   );
 
+  //
+  const { password, ...othersField } = user._doc as any;
+
   return {
     accessToken,
     refreshToken,
+    user: othersField as IUser,
   };
 };
 
@@ -119,20 +125,28 @@ const refreshToken = async (
 
   return {
     accessToken: newAccessToken,
+    user: userExist,
   };
 };
 
 // get user
-const getUser = (user: JwtPayload) => {
+const getUser = async (token: string, user: JwtPayload) => {
   console.log(user);
   if (!user?.email) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
   }
 
   // return the user
-  const result = User.findOne({ email: user?.email });
+  const result = await User.findOne(
+    { email: user?.email },
+    { createdAt: 0, updatedAt: 0, __v: 0 },
+  );
 
-  return result;
+  console.log(result);
+  return {
+    accessToken: token,
+    user: result,
+  };
 };
 
 export const AuthService = {

@@ -19,7 +19,7 @@ export const auth =
       let verifiedUser = null;
       try {
         verifiedUser = await jwtHelpers.verifyToken(
-          authoriedToken,
+          authoriedToken as string,
           config.jwt.secret as Secret,
         );
       } catch (error) {

@@ -4,6 +4,7 @@ import { ZodError } from 'zod';
 import config from '../../config';
 import ApiError from '../../errors/ApiError';
 import handleCastError from '../../errors/handleCastError';
+import handleMongoServerError from '../../errors/handleMongoServerError';
 import handleValidationEroor from '../../errors/handleValidationEroor';
 import handleZodError from '../../errors/handleZodError';
 import { IGenericErrorMessage } from '../../interface/error';
@@ -31,6 +32,14 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   else if (error?.name === 'CastError') {
     const simplifiedError = handleCastError(error);
 
+    // replace proerties
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  }
+  // mongoose duplicate error
+  else if (error?.name === 'MongoServerError' && error.code === 11000) {
+    const simplifiedError = handleMongoServerError(error);
     // replace proerties
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;

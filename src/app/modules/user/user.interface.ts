@@ -7,11 +7,11 @@ export type IUser = {
   fullName: string;
 };
 
-type IUserExist = Partial<IUser> & {
+export type IUserExist = Partial<IUser> & {
   _id: Types.ObjectId;
 };
 
 export interface UserModel extends Model<IUser> {
-  isUserExist(email: string): IUserExist;
+  isUserExist(email: string): IUserExist | IUser;
   isPasswordMatched(givenPassword: string, savedPassword: string): boolean;
 }

@@ -68,8 +68,12 @@ const refreshToken: RequestHandler = catchAsync(async (req, res) => {
 // get user
 const getUser: RequestHandler = catchAsync(async (req, res) => {
   const requestedUser = req.user;
+  const accessToken = req.headers.authorization;
 
-  const result = await AuthService.getUser(requestedUser as JwtPayload);
+  const result = await AuthService.getUser(
+    accessToken as string,
+    requestedUser as JwtPayload,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
