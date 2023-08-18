@@ -108,7 +108,17 @@ const addNewBook = async (payload: IBook) => {
 
 // update a book
 
-const updateBook = async (id: string, payload: Partial<IBook>) => {
+const updateBook = async (
+  id: string,
+  user: IRequestedUser,
+  payload: Partial<IBook>,
+) => {
+  // check same author
+  const sameAuthor = await Book.sameAuthor(user._id as string, id);
+  if (!sameAuthor) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  }
+
   const result = await Book.findByIdAndUpdate({ _id: id }, payload, {
     new: true,
   });

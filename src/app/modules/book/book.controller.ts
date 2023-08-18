@@ -74,7 +74,8 @@ const addNewBook = catchAsync(async (req, res) => {
 const updateBook = catchAsync(async (req, res) => {
   const data = req.body;
   const { id } = req.params;
-  const result = await BookService.updateBook(id, data);
+  const user = req.user;
+  const result = await BookService.updateBook(id, user as IRequestedUser, data);
 
   sendResponse(res, {
     success: true,

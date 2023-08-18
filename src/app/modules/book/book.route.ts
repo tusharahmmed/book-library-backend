@@ -16,6 +16,7 @@ router.post(
 router.patch(
   '/:id',
   validateZod(BookValidation.updateBookZodSchama),
+  auth(),
   BookController.updateBook,
 );
 
