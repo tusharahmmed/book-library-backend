@@ -131,7 +131,6 @@ const refreshToken = async (
 
 // get user
 const getUser = async (token: string, user: JwtPayload) => {
-  console.log(user);
   if (!user?.email) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
   }
@@ -142,7 +141,6 @@ const getUser = async (token: string, user: JwtPayload) => {
     { createdAt: 0, updatedAt: 0, __v: 0 },
   );
 
-  console.log(result);
   return {
     accessToken: token,
     user: result,

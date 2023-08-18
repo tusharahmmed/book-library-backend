@@ -5,6 +5,7 @@ const addBookZodSchama = z.object({
   body: z.object({
     title: z.string({ required_error: 'Titel is required' }),
     author: z.string({ required_error: 'Author is required' }),
+    image: z.string().optional(),
     genres: z.array(
       z.enum([...BookContant.BOOK_GENRE] as [string, ...string[]], {
         required_error: 'Genre is required',
@@ -20,6 +21,7 @@ const updateBookZodSchama = z.object({
   body: z.object({
     title: z.string().optional(),
     author: z.string().optional(),
+    image: z.string().optional(),
     genres: z
       .array(z.enum([...BookContant.BOOK_GENRE] as [string, ...string[]]))
       .optional(),

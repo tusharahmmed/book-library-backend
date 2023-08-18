@@ -1,6 +1,11 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import httpStatus from 'http-status';
 import { SortOrder } from 'mongoose';
+import ApiError from '../../../errors/ApiError';
 import { paginationHelper } from '../../../helpers/pagination';
 import { IPaginationOptions } from '../../../interface/pagination';
+import { IRequestedUser } from '../../../interface/req.user';
 import { IServiceFunction } from '../../../interface/response';
 import { BookContant } from './book.constant';
 import { IBook, IBookFilters } from './book.interface';
@@ -77,7 +82,12 @@ const getSingleBook = async (bookID: string) => {
 };
 
 // delete book
-const deleteBook = async (bookID: string) => {
+const deleteBook = async (user: IRequestedUser, bookID: string) => {
+  // check same author
+  const sameAuthor = await Book.sameAuthor(user._id as string, bookID);
+  if (!sameAuthor) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  }
   const result = await Book.findByIdAndDelete(bookID);
 
   return result;
@@ -85,7 +95,13 @@ const deleteBook = async (bookID: string) => {
 
 // add new book
 const addNewBook = async (payload: IBook) => {
-  const result = await Book.create(payload);
+  // remove empty img
+  let data = payload;
+  if (payload.image === '') {
+    const { image, ...others } = payload;
+    data = others;
+  }
+  const result = await Book.create(data);
 
   return result;
 };

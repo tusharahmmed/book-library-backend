@@ -1,5 +1,6 @@
 import httpStatus from 'http-status';
 import { PAGINATION_FIELD } from '../../../constants/pagination';
+import { IRequestedUser } from '../../../interface/req.user';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import { sendResponse } from '../../../shared/sendResponse';
@@ -43,7 +44,9 @@ const getSingleBook = catchAsync(async (req, res) => {
 const deleteBook = catchAsync(async (req, res) => {
   const bookId = req.params.id;
 
-  const result = await BookService.deleteBook(bookId);
+  const user = req.user;
+
+  const result = await BookService.deleteBook(user as IRequestedUser, bookId);
 
   sendResponse(res, {
     success: true,

@@ -13,6 +13,11 @@ const bookSchama = new Schema<IBook, BookModel>(
       type: String,
       required: true,
     },
+    image: {
+      type: String,
+      default:
+        'https://ik.imagekit.io/v1/next-level/imageonline-co-placeholder-image.png',
+    },
     genres: {
       type: [String],
       required: true,
@@ -33,5 +38,19 @@ const bookSchama = new Schema<IBook, BookModel>(
     timestamps: true,
   },
 );
+
+// satics
+bookSchama.statics.sameAuthor = async function (
+  userId: string,
+  bookId: string,
+) {
+  const result = await Book.findOne({ _id: bookId, authorId: userId });
+
+  if (result) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 export const Book = model<IBook, BookModel>('Book', bookSchama);
