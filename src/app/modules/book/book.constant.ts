@@ -1,6 +1,6 @@
 const BOOK_GENRE = ['Fiction', 'Novel', 'Mystery', 'History', 'Romance'];
 
-const SEARCHABLE_FIELD = ['title', 'author', 'genres'];
+const SEARCHABLE_FIELD = ['title', 'author', 'genres', 'publicationYear'];
 const FILTERS_FIELD = ['searchTerm', 'genres', 'publicationYear'];
 
 export const BookContant = {
