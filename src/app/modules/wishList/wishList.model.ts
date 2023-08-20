@@ -18,7 +18,6 @@ const wishListSchema = new Schema<IWishtList, WishListModel>({
           type: String,
           required: true,
           ref: 'Book',
-          unique: true,
         },
         status: {
           type: String,

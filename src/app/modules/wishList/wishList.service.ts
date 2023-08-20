@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { IBookList, IWishtList } from './wishList.interface';
 import { WishList } from './wishList.model';
 
@@ -47,26 +47,47 @@ const updateStatus = async (
 ) => {
   const { _id, ...others } = payload;
 
-  // remove old status
+  // initialize session
+  const session = await mongoose.startSession();
 
-  const removed = await WishList.findOneAndUpdate(
-    { userId },
-    {
-      $pull: { books: { _id: _id } },
-    },
-  );
-  // add new status
-  const result = await WishList.findOneAndUpdate(
-    { userId },
-    {
-      $addToSet: { books: others },
-    },
-    { new: true },
-  )
-    .populate('userId')
-    .populate('books.bookId');
+  let resultData = null;
 
-  return result;
+  try {
+    // start transaction
+    session.startTransaction();
+
+    // remove old status
+
+    const removed = await WishList.findOneAndUpdate(
+      { userId },
+      {
+        $pull: { books: { _id: _id } },
+      },
+    );
+    // add new status
+    const result = await WishList.findOneAndUpdate(
+      { userId },
+      {
+        $addToSet: { books: others },
+      },
+      { new: true },
+    )
+      .populate('userId')
+      .populate('books.bookId');
+
+    resultData = result;
+
+    // commit & end the session
+    await session.commitTransaction();
+    await session.endSession();
+  } catch (error) {
+    // if error abort & end session
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
+
+  return resultData;
 };
 
 // remove book from list
