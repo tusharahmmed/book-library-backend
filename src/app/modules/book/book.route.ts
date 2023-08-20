@@ -21,7 +21,7 @@ router.patch(
 );
 
 router.delete('/:id', auth(), BookController.deleteBook);
-
+router.get('/my-books/:id', auth(), BookController.getMyBooks);
 router.get('/:id', BookController.getSingleBook);
 router.get('/', BookController.getAllBooks);
 

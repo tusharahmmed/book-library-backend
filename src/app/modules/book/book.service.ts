@@ -126,10 +126,24 @@ const updateBook = async (
   return result;
 };
 
+// update a book
+
+const getMyBooks = async (id: string, user: IRequestedUser) => {
+  // check same user
+  if (user._id !== id) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  }
+
+  const result = await Book.find({ authorId: id });
+
+  return result;
+};
+
 export const BookService = {
   getAllBooks,
   getSingleBook,
   deleteBook,
   addNewBook,
   updateBook,
+  getMyBooks,
 };

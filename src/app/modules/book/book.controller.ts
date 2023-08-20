@@ -85,10 +85,25 @@ const updateBook = catchAsync(async (req, res) => {
   });
 });
 
+// get my books
+const getMyBooks = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+  const result = await BookService.getMyBooks(id, user as IRequestedUser);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Books retrieved successfully',
+    data: result,
+  });
+});
+
 export const BookController = {
   getAllBooks,
   getSingleBook,
   deleteBook,
   addNewBook,
   updateBook,
+  getMyBooks,
 };
