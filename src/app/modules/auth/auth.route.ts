@@ -20,8 +20,10 @@ router.post(
 router.post(
   '/refresh-token',
   validateZod(AuthValidation.refreshTokenZodScehma),
+  auth(),
   AuthController.refreshToken,
 );
+router.post('/logout', auth(), AuthController.logoutUser);
 
 router.get('/', auth(), AuthController.getUser);
 

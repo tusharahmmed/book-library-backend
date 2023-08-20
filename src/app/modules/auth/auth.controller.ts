@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
@@ -83,9 +85,30 @@ const getUser: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+// login user
+const logoutUser: RequestHandler = catchAsync(async (req, res) => {
+  const { refreshToken } = req.cookies;
+  const requestedUser = req.user;
+
+  const result = await AuthService.logout(
+    refreshToken as string,
+    requestedUser as JwtPayload,
+  );
+
+  // clear cookie
+  res.clearCookie('refreshToken');
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User logged out successfully',
+  });
+});
+
 export const AuthController = {
   createUser,
   loginUser,
   refreshToken,
   getUser,
+  logoutUser,
 };

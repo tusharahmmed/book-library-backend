@@ -146,10 +146,19 @@ const getUser = async (token: string, user: JwtPayload) => {
     user: result,
   };
 };
+// log out
+const logout = async (token: string, user: JwtPayload) => {
+  if (!user?.email) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
+  }
+
+  return token;
+};
 
 export const AuthService = {
   createUser,
   loginUser,
   refreshToken,
   getUser,
+  logout,
 };
