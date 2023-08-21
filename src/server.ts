@@ -16,8 +16,8 @@ let server: Server;
 // database connection
 async function ConnectDatabase() {
   try {
-    // await mongoose.connect(config.database_url as string);
-    await mongoose.connect('mongodb://127.0.0.1:27017/book-store' as string);
+    await mongoose.connect(config.database_url as string);
+    // await mongoose.connect('mongodb://127.0.0.1:27017/book-store' as string);
 
     server = app.listen(config.port, () => {
       console.log(`Book store app listening on port ${config.port}`);

@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BookRoutes = void 0;
+const express_1 = require("express");
+const auth_1 = require("../../middlewares/auth");
+const validateZod_1 = require("../../middlewares/validateZod");
+const book_controller_1 = require("./book.controller");
+const book_validation_1 = require("./book.validation");
+const router = (0, express_1.Router)();
+router.post('/add-new', (0, validateZod_1.validateZod)(book_validation_1.BookValidation.addBookZodSchama), (0, auth_1.auth)(), book_controller_1.BookController.addNewBook);
+router.patch('/:id', (0, validateZod_1.validateZod)(book_validation_1.BookValidation.updateBookZodSchama), (0, auth_1.auth)(), book_controller_1.BookController.updateBook);
+router.delete('/:id', (0, auth_1.auth)(), book_controller_1.BookController.deleteBook);
+router.get('/my-books/:id', (0, auth_1.auth)(), book_controller_1.BookController.getMyBooks);
+router.get('/:id', book_controller_1.BookController.getSingleBook);
+router.get('/', book_controller_1.BookController.getAllBooks);
+exports.BookRoutes = router;
