@@ -42,10 +42,11 @@ const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, _id } = result;
     const accessToken = jwtHelper_1.jwtHelpers.createToken({ _id, email }, config_1.default.jwt.secret, config_1.default.jwt.expires_in);
     const refreshToken = jwtHelper_1.jwtHelpers.createToken({ _id, email }, config_1.default.jwt.refresh_secret, config_1.default.jwt.refresh_expires_in);
+    const _a = result === null || result === void 0 ? void 0 : result._doc, { password } = _a, othersField = __rest(_a, ["password"]);
     return {
         accessToken,
         refreshToken,
-        user: result,
+        user: othersField,
     };
 });
 // log in user
@@ -65,7 +66,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = jwtHelper_1.jwtHelpers.createToken({ _id, email }, config_1.default.jwt.secret, config_1.default.jwt.expires_in);
     const refreshToken = jwtHelper_1.jwtHelpers.createToken({ _id, email }, config_1.default.jwt.refresh_secret, config_1.default.jwt.refresh_expires_in);
     //
-    const _a = user._doc, { password } = _a, othersField = __rest(_a, ["password"]);
+    const _b = user._doc, { password } = _b, othersField = __rest(_b, ["password"]);
     return {
         accessToken,
         refreshToken,

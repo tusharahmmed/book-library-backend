@@ -17,7 +17,7 @@ import { JwtPayload, Secret } from 'jsonwebtoken';
 import config from '../../../config';
 
 const createUser = async (payload: IUser) => {
-  const result = await User.create(payload);
+  const result: any = await User.create(payload);
 
   // if not create user
   if (!result) {
@@ -41,10 +41,12 @@ const createUser = async (payload: IUser) => {
     config.jwt.refresh_expires_in as string,
   );
 
+  const { password, ...othersField } = result?._doc as any;
+
   return {
     accessToken,
     refreshToken,
-    user: result,
+    user: othersField,
   };
 };
 
